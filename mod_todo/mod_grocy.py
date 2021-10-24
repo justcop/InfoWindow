@@ -30,6 +30,7 @@ class test:
                 items.append({
                     "content": item['product']['name'],
                     "best_before": item['best_before_date'],
+                    "location": item['product']['location'],
                     "days": str(days.days)
                     })
 

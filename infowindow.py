@@ -103,14 +103,14 @@ def main():
     red.text(440 - text_width, 0, "FRIDGE", 'robotoBlack24', 'white')
     text_width = red.textwidth("TASKS", 'robotoBlack24')
     red.text(737 - text_width, 0, "TASKS", 'robotoBlack24', 'white')
-    
+
     #Date header
     text_width = red.textwidth(date.today().strftime('%a'), 'robotoBlack18')
     red.text(292 - text_width, 0, date.today().strftime('%a'), 'robotoBlack18', 'white')
     text_width = red.textwidth(date.today().strftime('%-d %b'), 'robotoBlack18')
     red.text(589 - text_width, 0, date.today().strftime('%-d %b'), 'robotoBlack18', 'white')
     logging.info(date.today().strftime('%-d %b'))
-    
+
     # Set some things
     calendar_date_font = "robotoRegular14"
     calendar_entry_font = "robotoBlack18"
@@ -142,20 +142,20 @@ def main():
         else:
             todo_date = datetime.datetime.now().date()
         if datetime.datetime.now().date() >= todo_date:
-            
+
             if 2156103501 in todo_item['labels']:
                 red.text(595, (current_task_y + infowindow_opts["cell_spacing"]), red.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
                 red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
                 # set next loop height
                 current_task_y = (current_task_y + line_height + 2)
                 logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-            if todo_item['priority'] > 2:    
+            if todo_item['priority'] > 2:
                 black.text(595, (current_task_y + infowindow_opts["cell_spacing"]), black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
                 red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
                 # set next loop height
                 current_task_y = (current_task_y + line_height + 2)
                 logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-        
+
 
     # DISPLAY GROCY INFO
     # =========================================================================
@@ -170,12 +170,16 @@ def main():
 
       current_task_y = 25
       for grocy_item in grocy_items:
+          if int(grocy_item['location']) = 2
+                current_task_X = 1
+          if int(grocy_item['location']) = 3
+                current_task_X = 298
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
           if int(grocy_item['days']) < 3:
               text = red
           else:
               text = black
-      
+
           text.text(298, (current_task_y + infowindow_opts["cell_spacing"]), str(grocy_item['days'] + " "), tasks_font)
           (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x))
           text.text(583 - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
@@ -189,7 +193,7 @@ def main():
       logging.debug("Grocy Failed")
       logging.debug("-----------------------------------------------------------------------")
       red.text(298, (25 + infowindow_opts["cell_spacing"]), str("Grocy failed to load"), tasks_font)
-        
+
    # DISPLAY CALENDAR INFO
     # =========================================================================
     cal_items = cal.list()
@@ -256,21 +260,21 @@ def main():
     # =========================================================================
     red.image = red.image.rotate(rotation)
     black.image = black.image.rotate(rotation)
-    
+
     new_image_found = 0
     if os.path.exists(red.tmpImagePath):
             old_image = Image.open(red.tmpImagePath)
             diff = ImageChops.difference(red.image, old_image)
             if not diff.getbbox():
                 new_image_found += 1
-                
+
     if os.path.exists(black.tmpImagePath):
             old_image = Image.open(black.tmpImagePath)
             diff = ImageChops.difference(black.image, old_image)
             if not diff.getbbox():
                 new_image_found += 1
 
-    if new_image_found < 2:      
+    if new_image_found < 2:
             logging.info("New information in the image detected. Updating the screen.")
             red.image.save(red.tmpImagePath)
             black.image.save(black.tmpImagePath)
@@ -278,6 +282,6 @@ def main():
             red.epd.sleep()
     else:
             logging.info("No new information found. Not updating the screen.")
-    
+
 if __name__ == '__main__':
     main()
