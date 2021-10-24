@@ -174,10 +174,10 @@ def main():
       freezer_task_y = 25
       for grocy_item in grocy_items:
           logging.debug("ITEM: %s" % grocy_item['location'].encode(charset).strip())
-          if grocy_item['location'] == 3: #Fridge
+          if int(grocy_item['location']) == 3: #Fridge
                 current_task_X = 1
                 current_task_y = fridge_task_y
-          elif grocy_item['location'] == 2: #Freezer
+          elif int(grocy_item['location']) == 2: #Freezer
                 current_task_X = 298
                 current_task_y = freezer_task_y
           else:
