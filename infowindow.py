@@ -159,7 +159,9 @@ def main():
 
     # DISPLAY GROCY INFO
     # =========================================================================
-    try:
+    #try:
+    try = 1
+    if try:
       grocy_items = grocy.list()
       logging.debug("Grocy Items")
       logging.debug("-----------------------------------------------------------------------")
@@ -168,11 +170,13 @@ def main():
       (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
       line_height = t_y + (2 * infowindow_opts["cell_spacing"])
 
-      current_task_y = 25
+      fridge_task_y = 25
+      freezer_task_y = 25
       for grocy_item in grocy_items:
-          if grocy_item['location'] is '2':
+          if grocy_item['location'] is '3': #Fridge
                 current_task_X = 1
-          if grocy_item['location'] is '3':
+                current_task_y = fridge_task_y
+          if grocy_item['location'] is '2': #Freezer
                 current_task_X = 298
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
           if int(grocy_item['days']) < 3:
@@ -189,10 +193,10 @@ def main():
           # set next loop height
           current_task_y = (current_task_y + line_height + 2)
           logging.debug("ITEM: %s" % grocy_item['content'].encode(charset).strip())
-    except:
-      logging.debug("Grocy Failed")
-      logging.debug("-----------------------------------------------------------------------")
-      red.text(298, (25 + infowindow_opts["cell_spacing"]), str("Grocy failed to load"), tasks_font)
+    #except:
+    #  logging.debug("Grocy Failed")
+    #  logging.debug("-----------------------------------------------------------------------")
+    #  red.text(298, (25 + infowindow_opts["cell_spacing"]), str("Grocy failed to load"), tasks_font)
 
    # DISPLAY CALENDAR INFO
     # =========================================================================
