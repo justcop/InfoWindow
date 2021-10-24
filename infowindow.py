@@ -178,7 +178,7 @@ def main():
                 current_task_y = fridge_task_y
           elif grocy_item['location'] == '2': #Freezer
                 current_task_X = 298
-          else
+          else:
                 continue
 
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
