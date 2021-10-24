@@ -160,8 +160,8 @@ def main():
     # DISPLAY GROCY INFO
     # =========================================================================
     #try:
-    try = 1
-    if try:
+    tryx = 1
+    if tryx:
       grocy_items = grocy.list()
       logging.debug("Grocy Items")
       logging.debug("-----------------------------------------------------------------------")
