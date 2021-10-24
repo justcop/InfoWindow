@@ -176,8 +176,11 @@ def main():
           if grocy_item['location'] == '3': #Fridge
                 current_task_X = 1
                 current_task_y = fridge_task_y
-          if grocy_item['location'] == '2': #Freezer
+          elif grocy_item['location'] == '2': #Freezer
                 current_task_X = 298
+          else
+                continue
+
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
           if int(grocy_item['days']) < 3:
               text = red
