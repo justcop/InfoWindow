@@ -5,7 +5,7 @@ import os.path
 import json
 import logging
 import string
-import datetime
+from datetime import date
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -140,7 +140,7 @@ def main():
             todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
         else:
             todo_date = datetime.datetime.now().date()
-        if datetime.datetime.now().date() >= date:
+        if datetime.datetime.now().date() >= todo_date:
             
             if 2156103501 in todo_item['labels']:
                 red.text(595, (current_task_y + infowindow_opts["cell_spacing"]), red.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
