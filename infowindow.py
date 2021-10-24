@@ -170,9 +170,9 @@ def main():
 
       current_task_y = 25
       for grocy_item in grocy_items:
-          if int(grocy_item['location']) = 2:
+          if grocy_item['location'] is '2':
                 current_task_X = 1
-          if int(grocy_item['location']) = 3:
+          if grocy_item['location'] is '3':
                 current_task_X = 298
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
           if int(grocy_item['days']) < 3:
