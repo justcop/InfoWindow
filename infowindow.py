@@ -178,6 +178,7 @@ def main():
                 current_task_y = fridge_task_y
           elif grocy_item['location'] == '2': #Freezer
                 current_task_X = 298
+                current_task_y = freezer_task_y
           else:
                 continue
 
@@ -194,7 +195,10 @@ def main():
 
 
           # set next loop height
-          current_task_y = (current_task_y + line_height + 2)
+          if grocy_item['location'] == '3': #Fridge
+            current_task_y = (fridge_task_y + line_height + 2)
+          elif grocy_item['location'] == '2': #Freezer
+            current_task_y = (freezer_task_y + line_height + 2)
           logging.debug("ITEM: %s" % grocy_item['content'].encode(charset).strip())
     #except:
     #  logging.debug("Grocy Failed")
