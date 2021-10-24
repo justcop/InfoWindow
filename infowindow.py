@@ -189,67 +189,67 @@ def main():
       logging.debug("-----------------------------------------------------------------------")
       red.text(298, (25 + infowindow_opts["cell_spacing"]), str("Grocy failed to load"), tasks_font)
         
-    # DISPLAY CALENDAR INFO
+   # DISPLAY CALENDAR INFO
     # =========================================================================
-        cal_items = cal.list()
-        logging.debug("Calendar Items")
-        logging.debug("-----------------------------------------------------------------------")
+    cal_items = cal.list()
+    logging.debug("Calendar Items")
+    logging.debug("-----------------------------------------------------------------------")
 
-        if calendar_opts['timeformat'] == "12h":
-            (t_x, t_y) = get_max_char_size(red, string.digits, calendar_date_font)
-            (dt_x, dt_y) = black.getFont(calendar_date_font).getsize(': pm')
-            dt_x = dt_x + (4 * t_x)
-            if t_y > dt_y:
-                dt_y = t_y
+    if calendar_opts['timeformat'] == "12h":
+        (t_x, t_y) = get_max_char_size(red, string.digits, calendar_date_font)
+        (dt_x, dt_y) = black.getFont(calendar_date_font).getsize(': pm')
+        dt_x = dt_x + (4 * t_x)
+        if t_y > dt_y:
+            dt_y = t_y
 
-        else:
-            (t_x, t_y) = get_max_char_size(red, string.digits, calendar_date_font)
-            (dt_x, dt_y) = black.getFont(calendar_date_font).getsize('.')
-            dt_x = dt_x + (4 * t_x)
+    else:
+        (t_x, t_y) = get_max_char_size(red, string.digits, calendar_date_font)
+        (dt_x, dt_y) = black.getFont(calendar_date_font).getsize('.')
+        dt_x = dt_x + (4 * t_x)
 
-        (it_x, it_y) = get_max_char_size(red, string.printable, calendar_entry_font)
+    (it_x, it_y) = get_max_char_size(red, string.printable, calendar_entry_font)
 
-        line_height = (2 * dt_y) + (2 * infowindow_opts["cell_spacing"])
+    line_height = (2 * dt_y) + (2 * infowindow_opts["cell_spacing"])
 
-        current_calendar_y = 26
-        for cal_item in cal_items:
-            font_color = 'black'
-            text = black
-            if cal_item['today']:
-                text = red
-                black.rectangle(0, current_calendar_y,
+    current_calendar_y = 26
+    for cal_item in cal_items:
+        font_color = 'black'
+        text = black
+        if cal_item['today']:
+            text = red
+            black.rectangle(0, current_calendar_y,
                          285, (current_calendar_y + line_height),
                          calendar_opts['today_background_color'])
 
-            # draw horizontal line
-            red.line(0, (current_calendar_y + line_height + 1),
+        # draw horizontal line
+        red.line(0, (current_calendar_y + line_height + 1),
                 285, (current_calendar_y + line_height + 1),
                 'black')
-            # draw vertical line
-            red.line((dt_x + (2 * infowindow_opts["cell_spacing"]) + 1), current_calendar_y,
+        # draw vertical line
+        red.line((dt_x + (2 * infowindow_opts["cell_spacing"]) + 1), current_calendar_y,
                 (dt_x + (2 * infowindow_opts["cell_spacing"]) + 1), (current_calendar_y + line_height),
                 'black')
 
-            # draw event date
-            text.text((infowindow_opts["cell_spacing"]),
+        # draw event date
+        text.text((infowindow_opts["cell_spacing"]),
                 (current_calendar_y + infowindow_opts["cell_spacing"]),
-                cal_item['caldate'].encode(charset).strip(), calendar_date_font, font_color)
-            # draw event time
-            text.text((infowindow_opts["cell_spacing"]),
+                cal_item['date'].encode(charset).strip(), calendar_date_font, font_color)
+        # draw event time
+        text.text((infowindow_opts["cell_spacing"]),
                 (current_calendar_y + ((line_height - 2 * infowindow_opts["cell_spacing"]) / 2)),
                 cal_item['time'].encode(charset).strip(), calendar_date_font, font_color)
-            # draw event text
-            calendar_event_text_start = dt_x + (3 * infowindow_opts["cell_spacing"]) + 1
-            max_event_text_length = 285 - calendar_event_text_start - infowindow_opts["cell_spacing"]
-            text.text(calendar_event_text_start,
+        # draw event text
+        calendar_event_text_start = dt_x + (3 * infowindow_opts["cell_spacing"]) + 1
+        max_event_text_length = 285 - calendar_event_text_start - infowindow_opts["cell_spacing"]
+        text.text(calendar_event_text_start,
                 (current_calendar_y + ((line_height - it_y) / 2)),
                 black.truncate(cal_item['content'].encode(charset).strip(), calendar_entry_font, max_event_text_length),
                 calendar_entry_font, font_color)
 
-            # set new line height for next round
-            current_calendar_y = (current_calendar_y + line_height + 2)
-            # logging.debug("ITEM: "+str(cal_item['caldate']), str(cal_item['time']), str(cal_item['content']))
-            logging.debug("ITEM: %s" % cal_item['content'].encode(charset).strip())
+        # set new line height for next round
+        current_calendar_y = (current_calendar_y + line_height + 2)
+        # logging.debug("ITEM: "+str(cal_item['date']), str(cal_item['time']), str(cal_item['content']))
+        logging.debug("ITEM: %s" % cal_item['content'].encode(charset).strip())
 
     # Write to screen
     # =========================================================================
