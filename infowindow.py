@@ -5,7 +5,7 @@ import os.path
 import json
 import logging
 import string
-from datetime import date
+import datetime
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -159,7 +159,6 @@ def main():
 
     # DISPLAY GROCY INFO
     # =========================================================================
-    try:
       grocy_items = grocy.list()
       logging.debug("Grocy Items")
       logging.debug("-----------------------------------------------------------------------")
