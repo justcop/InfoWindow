@@ -175,12 +175,12 @@ def main():
       for grocy_item in grocy_items:
           if int(grocy_item['location']) == 3: #Fridge
                 current_task_X = 1
-                current_task_Xend = 583
+                current_task_Xend = 285
                 current_task_y = fridge_task_y
                 location = 'Fridge'
           elif int(grocy_item['location']) == 2: #Freezer
                 current_task_X = 298
-                current_task_Xend = 285
+                current_task_Xend = 583
                 current_task_y = freezer_task_y
                 location = 'Freezer'
           else:
