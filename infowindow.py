@@ -127,34 +127,34 @@ def main():
 
     # DISPLAY TODO INFO
     # =========================================================================
-    todo_items = todo.list()
-    logging.debug("Todo Items")
-    logging.debug("-----------------------------------------------------------------------")
+    #todo_items = todo.list()
+    #logging.debug("Todo Items")
+    #logging.debug("-----------------------------------------------------------------------")
 
-    (t_x, t_y) = red.getFont(tasks_font).getsize('JgGj')
-    (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
-    line_height = t_y + (2 * infowindow_opts["cell_spacing"])
+    #(t_x, t_y) = red.getFont(tasks_font).getsize('JgGj')
+    #(t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
+    #line_height = t_y + (2 * infowindow_opts["cell_spacing"])
 
-    current_task_y = 25
-    for todo_item in todo_items:
-        if todo_item['due']:
-            todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
-        else:
-            todo_date = datetime.datetime.now().date()
-        if datetime.datetime.now().date() >= todo_date:
+    #current_task_y = 25
+    #for todo_item in todo_items:
+        #if todo_item['due']:
+            #todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
+        #else:
+            #todo_date = datetime.datetime.now().date()
+        #if datetime.datetime.now().date() >= todo_date:
 
-            if 2156103501 in todo_item['labels']:
-                red.text(595, (current_task_y + infowindow_opts["cell_spacing"]), red.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
-                red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
+            #if 2156103501 in todo_item['labels']:
+                #red.text(595, (current_task_y + infowindow_opts["cell_spacing"]), red.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
+                #red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
                 # set next loop height
-                current_task_y = (current_task_y + line_height + 2)
-                logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-            if todo_item['priority'] > 2:
-                black.text(595, (current_task_y + infowindow_opts["cell_spacing"]), black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
-                red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
+                #current_task_y = (current_task_y + line_height + 2)
+                #logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
+            #if todo_item['priority'] > 2:
+                #black.text(595, (current_task_y + infowindow_opts["cell_spacing"]), black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
+                #red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
                 # set next loop height
-                current_task_y = (current_task_y + line_height + 2)
-                logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
+                #current_task_y = (current_task_y + line_height + 2)
+                #logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
 
 
     # DISPLAY GROCY INFO
