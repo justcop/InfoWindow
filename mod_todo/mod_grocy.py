@@ -12,7 +12,8 @@ class test:
             logging.warning("Not loading Todo API, since no api key is configured")
         else:
             self.api = requests.get("https://"+opts['server']+":"+opts['port']+"/api/stock?GROCY-API-KEY="+opts['api_key'])
-
+            logging.debug(self.api)
+            
     def list(self):
         today = datetime.date.today()
         items = []
