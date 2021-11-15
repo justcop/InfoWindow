@@ -173,15 +173,17 @@ def main():
       fridge_task_y = 25
       freezer_task_y = 25
       for grocy_item in grocy_items:
-          logging.debug("ITEM: %s" % grocy_item['location'])
           if int(grocy_item['location']) == 3: #Fridge
                 current_task_X = 1
                 current_task_y = fridge_task_y
+                location = Fridge
           elif int(grocy_item['location']) == 2: #Freezer
                 current_task_X = 298
                 current_task_y = freezer_task_y
+                location = Freezer
           else:
                 continue
+          logging.debug("ITEM: %s" % location )
 
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
           if int(grocy_item['days']) < 3:
@@ -196,9 +198,9 @@ def main():
 
 
           # set next loop height
-          if grocy_item['location'] == '3': #Fridge
+          if grocy_item['location'] == 3: #Fridge
             current_task_y = (fridge_task_y + line_height + 2)
-          elif grocy_item['location'] == '2': #Freezer
+          elif grocy_item['location'] == 2: #Freezer
             current_task_y = (freezer_task_y + line_height + 2)
           logging.debug("ITEM: %s" % grocy_item['content'].encode(charset).strip())
     #except:
