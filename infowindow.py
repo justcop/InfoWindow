@@ -175,12 +175,14 @@ def main():
       for grocy_item in grocy_items:
           if int(grocy_item['location']) == 3: #Fridge
                 current_task_X = 1
+                current_task_Xend = 583
                 current_task_y = fridge_task_y
-                location = Fridge
+                location = 'Fridge'
           elif int(grocy_item['location']) == 2: #Freezer
                 current_task_X = 298
+                current_task_Xend = 285
                 current_task_y = freezer_task_y
-                location = Freezer
+                location = 'Freezer'
           else:
                 continue
           logging.debug("ITEM: %s" % location )
@@ -193,7 +195,7 @@ def main():
 
           text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(grocy_item['days'] + " "), tasks_font)
           (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
-          text.text(583 - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
+          text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
           red.line(current_task_X, (current_task_y + line_height + 1), 582, (current_task_y + line_height + 1))
 
 
