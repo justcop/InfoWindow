@@ -195,7 +195,7 @@ def main():
           text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(grocy_item['days'] + " "), tasks_font)
           (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
           text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
-          red.line(current_task_X, (current_task_y + line_height + 1), 582, (current_task_y + line_height + 1))
+          red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
 
 
           # set next loop height
@@ -203,7 +203,7 @@ def main():
             fridge_task_y = (current_task_y + line_height + 2)
           elif grocy_item['location'] == 2: #Freezer
             freezer_task_y = (current_task_y + line_height + 2)
-          logging.debug("ITEM: %s" % location + " - " + grocy_item['content'].encode(charset).strip())
+          logging.debug("ITEM: %s" % current_task_X + location + " - " + grocy_item['content'].encode(charset).strip())
     #except:
     #  logging.debug("Grocy Failed")
     #  logging.debug("-----------------------------------------------------------------------")
