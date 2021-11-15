@@ -21,7 +21,7 @@ class test:
         if self.api:
             data = json.loads(self.api.content)
             for item in data:
-                logging.debug(item['content']
+                logging.debug(item['content'])
                 best_before = item['best_before_date']
                 best_before_date = datetime.date(int(best_before[0:4]),int(best_before[5:7]),int(best_before[8:10]))
                 days = best_before_date - today
