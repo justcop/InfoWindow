@@ -185,8 +185,7 @@ def main():
                 location = 'Freezer'
           else:
                 continue
-          logging.debug("ITEM: %s" % location )
-
+          
           (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
           if int(grocy_item['days']) < 3:
               text = red
@@ -204,7 +203,7 @@ def main():
             current_task_y = (fridge_task_y + line_height + 2)
           elif grocy_item['location'] == 2: #Freezer
             current_task_y = (freezer_task_y + line_height + 2)
-          logging.debug("ITEM: %s" % grocy_item['content'].encode(charset).strip())
+          logging.debug("ITEM: %s" % location + " - " + grocy_item['content'].encode(charset).strip())
     #except:
     #  logging.debug("Grocy Failed")
     #  logging.debug("-----------------------------------------------------------------------")
