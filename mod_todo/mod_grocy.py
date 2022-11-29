@@ -23,6 +23,7 @@ class test:
         items = []
         # Loop through original array from Grocy and pull out items by soonest best before date
         if self.api:
+            grocy_connect = true
             data = json.loads(self.api.content)
             for item in data:
                 logging.debug(item['product']['name'])
@@ -38,11 +39,5 @@ class test:
         if items:
             items = sorted(items, key = lambda i: i['best_before'])
         else:
-            items.append({
-                "content": "Connection Error",
-                "best_before": today,
-                "location": "Fridge",
-                "days": 0
-                })
-
+            grocy_connect = false
         return items
