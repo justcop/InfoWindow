@@ -17,6 +17,8 @@ class ToDo:
         # Loop through original array from Todoist and pull out
         # items of interest
         if self.api:
+            lenitems = len(self.api.state['items'])
+            logging.debug(lenitems)
             for item in self.api.state['items']:
                 if item['checked'] == 0:
                     if item['due']:
