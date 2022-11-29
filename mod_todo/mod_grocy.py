@@ -11,8 +11,12 @@ class test:
         if not opts['api_key']:
             logging.warning("Not loading Todo API, since no api key is configured")
         else:
-            self.api = requests.get("https://"+opts['server']+":"+opts['port']+"/api/stock?GROCY-API-KEY="+opts['api_key'])
-            logging.debug(self.api.content)
+            try:
+                self.api = requests.get("https://"+opts['server']+":"+opts['port']+"/api/stock?GROCY-API-KEY="+opts['api_key'])
+                logging.debug(self.api.content)
+            except:
+                logging.debug("Unable to connect to grocy server")
+
             
     def list(self):
         today = datetime.date.today()
@@ -31,8 +35,14 @@ class test:
                     "location": item['product']['location_id'],
                     "days": str(days.days)
                     })
-
-        items = sorted(items, key = lambda i: i['best_before'])
-
+        if items:
+            items = sorted(items, key = lambda i: i['best_before'])
+        else:
+            items.append({
+                "content": "Connection Error",
+                "best_before": today,
+                "location": "Fridge",
+                "days": 0
+                })
 
         return items
