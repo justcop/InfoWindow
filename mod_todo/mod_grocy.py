@@ -12,7 +12,7 @@ class test:
             logging.warning("Not loading Todo API, since no api key is configured")
         else:
             try:
-                self.api = requests.get("https://"+opts['server']+":"+opts['port']+"/api/stock?GROCY-API-KEY="+opts['api_key'])
+                self.api = requests.get("https://"+opts['server']+":"+opts['port']+"/api/stock?GROCY-API-KEY="+opts['api_key'],timeout=10)
                 logging.debug(self.api.content)
             except:
                 logging.debug("Unable to connect to grocy server")
