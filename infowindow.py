@@ -168,7 +168,8 @@ def main():
 
     fridge_task_y = 25
     freezer_task_y = 25
-    for grocy_item in grocy_items:
+    if grocy_connect:
+       for grocy_item in grocy_items:
           if int(grocy_item['location']) == 3: #Fridge
                 current_task_X = 1
                 current_task_Xend = 285
