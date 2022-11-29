@@ -17,7 +17,7 @@ class ToDo:
         # Loop through original array from Todoist and pull out
         # items of interest
         for item in self.api.state['items']:
-                if item['checked'] == 0:
+            if item['checked'] == 0:
                     if item['due']:
                         items.append({
                             "content": item['content'],
