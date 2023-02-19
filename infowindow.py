@@ -130,77 +130,55 @@ def main():
     todo_items = todo.list()
     logging.debug("Todo Items")
     logging.debug("-----------------------------------------------------------------------")
-
-    (t_x, t_y) = red.getFont(tasks_font).getsize('JgGj')
-    (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
-    line_height = t_y + (2 * infowindow_opts["cell_spacing"])
-
-    current_task_y = 25
-    for todo_item in todo_items:
-        if todo_item['due']:
-            todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
-        else:
-            todo_date = datetime.datetime.now().date()
-        if datetime.datetime.now().date() >= todo_date:
-
-            if 2156103501 in todo_item['labels']:
-                red.text(595, (current_task_y + infowindow_opts["cell_spacing"]), red.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
-                red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
-                # set next loop height
-                current_task_y = (current_task_y + line_height + 2)
-                logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-            if todo_item['priority'] > 2:
-                black.text(595, (current_task_y + infowindow_opts["cell_spacing"]), black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
-                red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
-                # set next loop height
-                current_task_y = (current_task_y + line_height + 2)
-                logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-
-
-    # DISPLAY GROCY INFO
-    # =========================================================================
-    grocy_items = grocy.list()
-    logging.debug("Grocy Items")
-    logging.debug("-----------------------------------------------------------------------")
-
+    
     (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
     line_height = t_y + (2 * infowindow_opts["cell_spacing"])
 
     fridge_task_y = 25
     freezer_task_y = 25
-    if grocy_connect:
-       for grocy_item in grocy_items:
-          if int(grocy_item['location']) == 3: #Fridge
+    current_task_y = 25
+
+    for todo_item in todo_items:
+        if todo_item['due']:
+            todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
+        else:
+            todo_date = datetime.datetime.now().date()
+        
+        if "Fridge" in todo_item['labels']
                 current_task_X = 1
                 current_task_Xend = 285
                 current_task_y = fridge_task_y
                 location = 'Fridge'
-          elif int(grocy_item['location']) == 2: #Freezer
+        elif "Freezer" in todo_item['labels']
                 current_task_X = 298
                 current_task_Xend = 583
                 current_task_y = freezer_task_y
                 location = 'Freezer'
-          else:
+        else:
                 continue
           
-          (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
-          if int(grocy_item['days']) < 3:
+          todo_days = (todo_date - datetime.datetime.now().date()).days
+          (np_x, np_y) = red.getFont(tasks_font).getsize(str(todo_days) + " ")
+          if int(todo_days) < 3:
               text = red
           else:
               text = black
 
-          text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(grocy_item['days'] + " "), tasks_font)
+          text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(todo_days + " "), tasks_font)
           (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
           text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
           red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
 
 
           # set next loop height
-          if grocy_item['location'] == 3: #Fridge
+          if location = 'Fridge'
             fridge_task_y = (current_task_y + line_height + 2)
-          elif grocy_item['location'] == 2: #Freezer
+          elif location = 'Freezer'
             freezer_task_y = (current_task_y + line_height + 2)
-          logging.debug("ITEM: %s" % current_task_X + location + " - " + grocy_item['content'].encode(charset).strip())
+          logging.debug("ITEM: %s" % current_task_X + location + " - " + todo_item['content'].encode(charset).strip())
+    
+
+    
     
    # DISPLAY CALENDAR INFO
     # =========================================================================
