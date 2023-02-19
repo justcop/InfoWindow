@@ -171,9 +171,9 @@ def main():
 
 
         # set next loop height
-        if location = 'Fridge'
+        if location == 'Fridge'
             fridge_task_y = (current_task_y + line_height + 2)
-        elif location = 'Freezer'
+        elif location == 'Freezer'
             freezer_task_y = (current_task_y + line_height + 2)
         logging.debug("ITEM: %s" % current_task_X + location + " - " + todo_item['content'].encode(charset).strip())
      
