@@ -53,7 +53,7 @@ logging.info("Configuration Complete")
 def HandleException(et, val, tb):
     red = infowindow.InfoWindow()
     red.text(0, 10, "EXCEPTION IN PROGRAM", 'robotoBlack18', 'black')
-    red.text(0, 30, val.encode(charset).strip(), 'robotoBlack18', 'black')
+    red.text(0, 30, val.strip(), 'robotoBlack18', 'black')
     red.text(0, 60, "Please run program from command line interactivly to resolve", 'robotoBlack18', 'black')
     print("EXCEPTION IN PROGRAM ==================================")
     print("error message: %s" % val)
@@ -61,7 +61,8 @@ def HandleException(et, val, tb):
     print("traceback:     %s" % tb)
     print("line:          %s" % tb.lineno)
     print("END EXCEPTION =========================================")
-    red.display(rotation)
+    red.epd.display(black.epd.getbuffer(red.display(rotation)),red.epd.getbuffer(red.display(rotation)))
+
 
 
 sys.excepthook = HandleException
