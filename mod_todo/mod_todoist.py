@@ -1,6 +1,5 @@
-from todoist.api import TodoistAPI
+from todoist_api_python.api import TodoistAPI
 import logging
-
 
 class ToDo:
     def __init__(self, opts):
@@ -10,22 +9,20 @@ class ToDo:
             logging.warning("Not loading Todo API, since no api key is configured")
         else:
             self.api = TodoistAPI(opts['api_key'])
-            self.api.sync()
-
+            
     def list(self):
         items = []
         # Use the REST API to fetch the latest state
-        state = self.api.state.get(['items'])
-
+        tasks = self.get_tasks()
         # Loop through the items and pull out the ones of interest
-        for item in state['items']:
-            if item['checked'] == 0:
-                if item['due']:
+        for task in tasks:
+            if task.checked == 0:
+                if task.due:
                     items.append({
                         "content": item.content,
                         "priority": item.priority,
                         "labels": item.labels,
-                        "due": item.due['date']
+                        "due": item.due.date
                     })
                 else:
                     items.append({
