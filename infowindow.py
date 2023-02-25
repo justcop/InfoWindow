@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import sys
 import os.path
@@ -52,13 +52,13 @@ logging.info("Configuration Complete")
 # Custom exception handler. Need to handle exceptions and send them to the
 # display since this will run headless most of the time. This gives the user
 # enough info to know that they need to troubleshoot.
-def HandleException(et, str(str(val)) as tb):
+def HandleException(et, val, tb):
     red = infowindow.InfoWindow()
     red.text(0, 10, "EXCEPTION IN PROGRAM", 'robotoBlack18', 'black')
-    red.text(0, 30, str(str(val)).encode(charset).strip(), 'robotoBlack18', 'black')
+    red.text(0, 30, val.encode(charset).strip(), 'robotoBlack18', 'black')
     red.text(0, 60, "Please run program from command line interactivly to resolve", 'robotoBlack18', 'black')
     print("EXCEPTION IN PROGRAM ==================================")
-    print("error message: %s" % str(str(val)))
+    print("error message: %s" % val)
     print("type:          %s" % et)
     print("traceback:     %s" % tb)
     print("line:          %s" % tb.lineno)
@@ -132,7 +132,7 @@ def main():
     logging.debug("-----------------------------------------------------------------------")
 
     (t_x, t_y) = red.getFont(tasks_font).getsize('JgGj')
-    (t_x, t_y) = get_max_char_size(red, string.ascii_letters + string.digits, tasks_font)
+    (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
     line_height = t_y + (2 * infowindow_opts["cell_spacing"])
 
     current_task_y = 25
@@ -163,7 +163,7 @@ def main():
     logging.debug("Grocy Items")
     logging.debug("-----------------------------------------------------------------------")
 
-    (t_x, t_y) = get_max_char_size(red, string.ascii_letters + string.digits, tasks_font)
+    (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
     line_height = t_y + (2 * infowindow_opts["cell_spacing"])
 
     fridge_task_y = 25
@@ -202,6 +202,68 @@ def main():
             freezer_task_y = (current_task_y + line_height + 2)
           logging.debug("ITEM: %s" % current_task_X + location + " - " + grocy_item['content'].encode(charset).strip())
     
+   # DISPLAY CALENDAR INFO
+    # =========================================================================
+    # cal_items = cal.list()
+    # logging.debug("Calendar Items")
+    # logging.debug("-----------------------------------------------------------------------")
+    #
+    # if calendar_opts['timeformat'] == "12h":
+    #     (t_x, t_y) = get_max_char_size(red, string.digits, calendar_date_font)
+    #     (dt_x, dt_y) = black.getFont(calendar_date_font).getsize(': pm')
+    #     dt_x = dt_x + (4 * t_x)
+    #     if t_y > dt_y:
+    #         dt_y = t_y
+    #
+    # else:
+    #     (t_x, t_y) = get_max_char_size(red, string.digits, calendar_date_font)
+    #     (dt_x, dt_y) = black.getFont(calendar_date_font).getsize('.')
+    #     dt_x = dt_x + (4 * t_x)
+    #
+    # (it_x, it_y) = get_max_char_size(red, string.printable, calendar_entry_font)
+    #
+    # line_height = (2 * dt_y) + (2 * infowindow_opts["cell_spacing"])
+    #
+    # current_calendar_y = 26
+    # for cal_item in cal_items:
+    #     font_color = 'black'
+    #     text = black
+    #     if cal_item['today']:
+    #         text = red
+    #         black.rectangle(0, current_calendar_y,
+    #                      285, (current_calendar_y + line_height),
+    #                      calendar_opts['today_background_color'])
+    #
+    #     # draw horizontal line
+    #     red.line(0, (current_calendar_y + line_height + 1),
+    #             285, (current_calendar_y + line_height + 1),
+    #             'black')
+    #     # draw vertical line
+    #     red.line((dt_x + (2 * infowindow_opts["cell_spacing"]) + 1), current_calendar_y,
+    #             (dt_x + (2 * infowindow_opts["cell_spacing"]) + 1), (current_calendar_y + line_height),
+    #             'black')
+    #
+    #     # draw event date
+    #     text.text((infowindow_opts["cell_spacing"]),
+    #             (current_calendar_y + infowindow_opts["cell_spacing"]),
+    #             cal_item['date'].encode(charset).strip(), calendar_date_font, font_color)
+    #     # draw event time
+    #     text.text((infowindow_opts["cell_spacing"]),
+    #             (current_calendar_y + ((line_height - 2 * infowindow_opts["cell_spacing"]) / 2)),
+    #             cal_item['time'].encode(charset).strip(), calendar_date_font, font_color)
+    #     # draw event text
+    #     calendar_event_text_start = dt_x + (3 * infowindow_opts["cell_spacing"]) + 1
+    #     max_event_text_length = 285 - calendar_event_text_start - infowindow_opts["cell_spacing"]
+    #     text.text(calendar_event_text_start,
+    #             (current_calendar_y + ((line_height - it_y) / 2)),
+    #             black.truncate(cal_item['content'].encode(charset).strip(), calendar_entry_font, max_event_text_length),
+    #             calendar_entry_font, font_color)
+    #
+    #     # set new line height for next round
+    #     current_calendar_y = (current_calendar_y + line_height + 2)
+    #     # logging.debug("ITEM: "+str(cal_item['date']), str(cal_item['time']), str(cal_item['content']))
+    #     logging.debug("ITEM: %s" % cal_item['content'].encode(charset).strip())
+
     # Write to screen
     # =========================================================================
     red.image = red.image.rotate(rotation)
