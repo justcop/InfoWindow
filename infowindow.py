@@ -141,16 +141,16 @@ def main():
         else:
             todo_date = datetime.datetime.now().date()
         
-        if "Fridge" in todo_item['labels']:
+        if "Freezer" in todo_item['labels']:
                 current_task_X = 1
                 current_task_Xend = 285
-                current_task_y = fridge_task_y
-                location = 'Fridge'
-        elif "Freezer" in todo_item['labels']:
-                current_task_X = 298
-                current_task_Xend = 583
                 current_task_y = freezer_task_y
                 location = 'Freezer'
+        elif "Fridge" in todo_item['labels']:
+                current_task_X = 298
+                current_task_Xend = 583
+                current_task_y = fridge_task_y
+                location = 'Fridge'
         else:
                 continue
           
