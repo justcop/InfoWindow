@@ -127,7 +127,7 @@ def main():
     todo_items = todo.list()
     logging.debug("Todo Items")
     logging.debug("-----------------------------------------------------------------------")
-    
+
     (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
     line_height = t_y + (2 * infowindow_opts["cell_spacing"])
 
@@ -136,45 +136,41 @@ def main():
     current_task_y = 25
 
     for todo_item in todo_items:
-        if todo_item['due']:
-            todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
-        else:
-            todo_date = datetime.datetime.now().date()
+        if todo_item['project_name'] == 'Food':
+            todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
         
-        if "Freezer" in todo_item['labels']:
+            if "Freezer" in todo_item['labels']:
                 current_task_X = 1
                 current_task_Xend = 285
                 current_task_y = freezer_task_y
                 location = 'Freezer'
-        elif "Fridge" in todo_item['labels']:
+            elif "Fridge" in todo_item['labels']:
                 current_task_X = 298
                 current_task_Xend = 583
                 current_task_y = fridge_task_y
                 location = 'Fridge'
-        else:
+            else:
                 continue
-          
-        todo_days = (todo_date - datetime.datetime.now().date()).days
-        (np_x, np_y) = red.getFont(tasks_font).getsize(str(todo_days) + " ")
-        if int(todo_days) < 3:
-            text = red
-        else:
-            text = black
 
-        text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(todo_days + " "), tasks_font)
-        (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
-        text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
-        red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
+            todo_days = (todo_date - datetime.datetime.now().date()).days
+            (np_x, np_y) = red.getFont(tasks_font).getsize(str(todo_days) + " ")
+            if int(todo_days) < 3:
+                text = red
+            else:
+                text = black
 
+            text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(todo_days) + " ", tasks_font)
+            (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
+            text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
+            red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
 
-        # set next loop height
-        if location == 'Fridge':
-            fridge_task_y = (current_task_y + line_height + 2)
-        elif location == 'Freezer':
-            freezer_task_y = (current_task_y + line_height + 2)
-        logging.debug("ITEM: %s" % current_task_X + location + " - " + todo_item['content'].encode(charset).strip())
+            # set next loop height
+            if location == 'Fridge':
+                fridge_task_y = (current_task_y + line_height + 2)
+            elif location == 'Freezer':
+                freezer_task_y = (current_task_y + line_height + 2)
+            logging.debug("ITEM: %s" % (str(current_task_X) + location + " - " + todo_item['content'].encode(charset).strip()))
      
-   
     # Write to screen
     # =========================================================================
     red.image = red.image.rotate(rotation)
