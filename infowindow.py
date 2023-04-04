@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import sys
 import os.path
@@ -46,26 +46,6 @@ infowindow_opts["cell_spacing"] = config_data["general"]["cell_spacing"]
 logging.basicConfig(level=logging.DEBUG)
 logging.info("Configuration Complete")
 
-
-# Custom exception handler. Need to handle exceptions and send them to the
-# display since this will run headless most of the time. This gives the user
-# enough info to know that they need to troubleshoot.
-def HandleException(et, val, tb):
-    red = infowindow.InfoWindow()
-    red.text(0, 10, "EXCEPTION IN PROGRAM", 'robotoBlack18', 'black')
-    red.text(0, 30, val.strip(), 'robotoBlack18', 'black')
-    red.text(0, 60, "Please run program from command line interactivly to resolve", 'robotoBlack18', 'black')
-    print("EXCEPTION IN PROGRAM ==================================")
-    print("error message: %s" % val)
-    print("type:          %s" % et)
-    print("traceback:     %s" % tb)
-    print("line:          %s" % tb.lineno)
-    print("END EXCEPTION =========================================")
-    red.epd.display(black.epd.getbuffer(red.display(rotation)),red.epd.getbuffer(red.display(rotation)))
-
-
-
-sys.excepthook = HandleException
 
 # helper to calculate max char width and height
 def get_max_char_size(black, chars, font):
@@ -161,7 +141,8 @@ def main():
 
             text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(todo_days) + " ", tasks_font)
             (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
-            text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
+            
+            text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(todo_item['content'].encode(charset).strip().decode(), tasks_font, 286 - np_x), tasks_font)
             red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
 
             # set next loop height
@@ -169,8 +150,8 @@ def main():
                 fridge_task_y = (current_task_y + line_height + 2)
             elif location == 'Freezer':
                 freezer_task_y = (current_task_y + line_height + 2)
-            logging.debug("ITEM: %s" % (str(current_task_X) + location + " - " + todo_item['content'].encode(charset).strip()))
-     
+            logging.debug("ITEM: %s" % (str(current_task_X) + location + " - " + todo_item['content'].encode(charset).strip().decode()))
+         
     # Write to screen
     # =========================================================================
     red.image = red.image.rotate(rotation)
