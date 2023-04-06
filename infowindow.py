@@ -140,9 +140,9 @@ def main():
                 text = black
 
             text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(todo_days) + " ", tasks_font)
-            (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
+            (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(todo_item['content'].strip(), tasks_font, 285 - np_x))
             
-            text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(todo_item['content'].encode(charset).strip().decode(), tasks_font, 286 - np_x), tasks_font)
+            text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(todo_item['content'].strip(), tasks_font, 286 - np_x), tasks_font)
             red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
 
             # set next loop height
