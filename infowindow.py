@@ -12,17 +12,8 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from PIL import ImageChops
 from mod_infowindow import infowindow
-
-# Select pluggable module for todo list, calendar and weather.
-# Replace the mod_<name> with one of:
-# TODO: mod_todoist, mod_teamwork
-# CALENDAR: mod_google, mod_ical
 from mod_utils import iw_utils
-from mod_todo import mod_todoist as modTodo  # TODO
-from mod_calendar import mod_google as modCalendar  # CALENDAR
-from mod_todo import mod_grocy as modGrocy
-
-# TODO: Create dictionaries for API args. so that they can be custom.
+from mod_todo import mod_todoist as modTodo 
 
 # Configuration ###############################################################
 config_path = os.path.join(iw_utils.getCWD(), "config.json")
@@ -33,13 +24,24 @@ with open(config_path) as config_file:
 rotation = config_data["general"]["rotation"]
 charset = config_data["general"]["charset"]
 todo_opts = config_data["todo"]
-grocy_opts = config_data["grocy"]
-calendar_opts = config_data["calendar"]
 infowindow_opts = {}
 # give the timeformat to all the modules needing it
-calendar_opts["timeformat"] = config_data["general"]["timeformat"]
 infowindow_opts["timeformat"] = config_data["general"]["timeformat"]
 infowindow_opts["cell_spacing"] = config_data["general"]["cell_spacing"]
+
+# Define column properties
+column_properties = {
+    1: {'name': 'Tasks', 'x_start': 1, 'x_end': 286},
+    2: {'name': 'Decisions', 'x_start': 298, 'x_end': 583},
+    3: {'name': 'Food', 'x_start': 595, 'x_end': 880},
+}
+initial_y = 25
+next_task_y = {1: initial_y, 2: initial_y, 3: initial_y}
+current_task_X = 0
+current_task_Xend = 0
+current_task_y = 0
+column = 0
+line_height = 0
 
 # END CONFIGURATION ###########################################################
 ###############################################################################
@@ -49,43 +51,43 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("Configuration Complete")
 
 
-# Custom exception handler. Need to handle exceptions and send them to the
-# display since this will run headless most of the time. This gives the user
-# enough info to know that they need to troubleshoot.
-def HandleException(et, str(str(val)) as tb):
-    red = infowindow.InfoWindow()
-    red.text(0, 10, "EXCEPTION IN PROGRAM", 'robotoBlack18', 'black')
-    red.text(0, 30, str(str(val)).encode(charset).strip(), 'robotoBlack18', 'black')
-    red.text(0, 60, "Please run program from command line interactivly to resolve", 'robotoBlack18', 'black')
-    print("EXCEPTION IN PROGRAM ==================================")
-    print("error message: %s" % str(str(val)))
-    print("type:          %s" % et)
-    print("traceback:     %s" % tb)
-    print("line:          %s" % tb.lineno)
-    print("END EXCEPTION =========================================")
-    red.display(rotation)
-
-
-sys.excepthook = HandleException
-
 # helper to calculate max char width and height
 def get_max_char_size(black, chars, font):
     max_x = 0
     max_y = 0
     for char in chars:
-        (x, y) = black.getFont(font).getsize(char)
+        bbox = black.getFont(font).getbbox(char)  # Get the bounding box of the character
+        x, y = bbox[2], bbox[3]  # Extract the width and height from the bounding box
         if x > max_x:
             max_x = x
         if y > max_y:
             max_y = y
     return max_x, max_y
 
+def set_column(Set_Column):
+    global current_task_X, current_task_Xend, current_task_y, next_task_y, line_height, column
+    
+    column = Set_Column    
+    # Set the current_task_X and current_task_Xend based on the column input
+    current_task_X = column_properties[column]['x_start']
+    current_task_Xend = column_properties[column]['x_end']
+    
+    # Set the current_task_y for the specified column and update next_task_y for that column
+    current_task_y = next_task_y[column]
+    next_task_y[column] += line_height + infowindow_opts["cell_spacing"]
+    
+    
 # Main Program ################################################################
 def main():
+    global column_properties, current_task_X, current_task_Xend, current_task_y, next_task_y, line_height, column
+    
+    # Set fonts
+    title_font = "robotoBlack24"
+    date_font = "robotoBlack18"
+    tasks_font = "robotoBlack18"
+    
     # Instantiate API modules
     todo = modTodo.ToDo(todo_opts)
-    #cal = modCalendar.Cal(calendar_opts)
-    grocy = modGrocy.test(grocy_opts)
 
     # Setup e-ink initial drawings
     red = infowindow.InfoWindow(infowindow_opts, "red")
@@ -97,24 +99,18 @@ def main():
     black.line(0, 25, 880, 25)  # Bottom Black Line
 
     # Titles
-    text_width = red.textwidth("FRIDGE", 'robotoBlack24')
-    red.text(143 - text_width, 0, "FRIDGE", 'robotoBlack24', 'white')
-    text_width = red.textwidth("FREEZER", 'robotoBlack24')
-    red.text(440 - text_width, 0, "FREEZER", 'robotoBlack24', 'white')
-    text_width = red.textwidth("TASKS", 'robotoBlack24')
-    red.text(737 - text_width, 0, "TASKS", 'robotoBlack24', 'white')
+    for column, properties in column_properties.items():
+      name_upper = properties['name'].upper()
+      text_width = red.textwidth(name_upper, title_font)
+      x_center = (properties['x_start'] + properties['x_end']) // 2
+      red.text(x_center - text_width/2, 0, name_upper, title_font, 'white')
 
     #Date header
-    text_width = red.textwidth(date.today().strftime('%a'), 'robotoBlack18')
-    red.text(292 - text_width, 0, date.today().strftime('%a'), 'robotoBlack18', 'white')
-    text_width = red.textwidth(date.today().strftime('%-d %b'), 'robotoBlack18')
-    red.text(589 - text_width, 0, date.today().strftime('%-d %b'), 'robotoBlack18', 'white')
+    text_width = red.textwidth(date.today().strftime('%a'), date_font)
+    red.text(292 - text_width/2, 0, date.today().strftime('%a'), date_font, 'white')
+    text_width = red.textwidth(date.today().strftime('%-d %b'), date_font)
+    red.text(589 - text_width/2, 0, date.today().strftime('%-d %b'), date_font, 'white')
     logging.info(date.today().strftime('%-d %b'))
-
-    # Set some things
-    calendar_date_font = "robotoRegular14"
-    calendar_entry_font = "robotoBlack18"
-    tasks_font = "robotoBlack18"
 
     # Dividing lines
     black.line(286, 24, 286, 528)  # Left Black line
@@ -130,97 +126,86 @@ def main():
     todo_items = todo.list()
     logging.debug("Todo Items")
     logging.debug("-----------------------------------------------------------------------")
-
-    (t_x, t_y) = red.getFont(tasks_font).getsize('JgGj')
-    (t_x, t_y) = get_max_char_size(red, string.ascii_letters + string.digits, tasks_font)
-    line_height = t_y + (2 * infowindow_opts["cell_spacing"])
-
-    current_task_y = 25
-    for todo_item in todo_items:
-        if todo_item['due']:
-            todo_date = datetime.datetime.strptime(todo_item['due'][0:10], '%Y-%m-%d').date()
-        else:
-            todo_date = datetime.datetime.now().date()
-        if datetime.datetime.now().date() >= todo_date:
-
-            if 2156103501 in todo_item['labels']:
-                red.text(595, (current_task_y + infowindow_opts["cell_spacing"]), red.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
-                red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
-                # set next loop height
-                current_task_y = (current_task_y + line_height + 2)
-                logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-            if todo_item['priority'] > 2:
-                black.text(595, (current_task_y + infowindow_opts["cell_spacing"]), black.truncate(todo_item['content'].encode(charset).strip(), tasks_font, 286), tasks_font)
-                red.line(595, (current_task_y + line_height + 1), 880, (current_task_y + line_height + 1))
-                # set next loop height
-                current_task_y = (current_task_y + line_height + 2)
-                logging.debug("ITEM: %s" % todo_item['content'].encode(charset).strip())
-
-
-    # DISPLAY GROCY INFO
-    # =========================================================================
-    grocy_items = grocy.list()
-    logging.debug("Grocy Items")
-    logging.debug("-----------------------------------------------------------------------")
-
-    (t_x, t_y) = get_max_char_size(red, string.ascii_letters + string.digits, tasks_font)
-    line_height = t_y + (2 * infowindow_opts["cell_spacing"])
-
-    fridge_task_y = 25
-    freezer_task_y = 25
-    if grocy_connect:
-       for grocy_item in grocy_items:
-          if int(grocy_item['location']) == 3: #Fridge
-                current_task_X = 1
-                current_task_Xend = 285
-                current_task_y = fridge_task_y
-                location = 'Fridge'
-          elif int(grocy_item['location']) == 2: #Freezer
-                current_task_X = 298
-                current_task_Xend = 583
-                current_task_y = freezer_task_y
-                location = 'Freezer'
-          else:
-                continue
-          
-          (np_x, np_y) = red.getFont(tasks_font).getsize(str(grocy_item['days']) + " ")
-          if int(grocy_item['days']) < 3:
-              text = red
-          else:
-              text = black
-
-          text.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), str(grocy_item['days'] + " "), tasks_font)
-          (op_x, op_y) = text.getFont(tasks_font).getsize(black.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 285 - np_x))
-          text.text(current_task_Xend - op_x, (current_task_y + infowindow_opts["cell_spacing"]), text.truncate(grocy_item['content'].encode(charset).strip(), tasks_font, 286 - np_x), tasks_font)
-          red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
-
-
-          # set next loop height
-          if grocy_item['location'] == 3: #Fridge
-            fridge_task_y = (current_task_y + line_height + 2)
-          elif grocy_item['location'] == 2: #Freezer
-            freezer_task_y = (current_task_y + line_height + 2)
-          logging.debug("ITEM: %s" % current_task_X + location + " - " + grocy_item['content'].encode(charset).strip())
     
+    (t_x, t_y) = get_max_char_size(red, string.printable, tasks_font)
+    line_height = t_y + (2 * infowindow_opts["cell_spacing"])
+
+    for todo_item in todo_items:
+            
+            column = 0
+            colour = black
+            todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
+            todo_days = (todo_date - date.today()).days
+            
+            
+            if todo_item['project_name'] == 'Food':        
+              set_column(3)
+              
+              if "Freezer" in todo_item['labels']:  
+                colour = black
+              else:
+                colour = red               
+
+            if "To_Decide" in todo_item['labels']:
+                set_column(2)
+                if int(todo_days) < 3:
+                  colour = red
+                  
+            if "Charlotte" in todo_item['labels']:
+                set_column(1)
+                colour = red
+                
+            if "Joint" in todo_item['labels']:
+                set_column(1)
+            
+            if column:
+                
+                if column:
+                    # Set the start and end positions of the column space
+                    column_width = current_task_Xend - current_task_X
+                    
+                    # Get the number of days until the task is due
+                    number_text = str(todo_days) + " "
+                    number_length = colour.textwidth(number_text, tasks_font)
+                    
+                    # Truncate the task content to fit within the column space
+                    text = colour.truncate(todo_item['content'].strip(), tasks_font, column_width - number_length)
+                    text_length = colour.textwidth(text, tasks_font)
+                    
+                    # Calculate the position to right-align the task content within the column space
+                    content_x = current_task_Xend - text_length
+
+                    # Draw the number of days and task content
+                    colour.text(current_task_X, (current_task_y + infowindow_opts["cell_spacing"]), number_text, tasks_font)
+                    colour.rtext(content_x, (current_task_y + infowindow_opts["cell_spacing"]), text, tasks_font)
+                    
+                    # Draw a horizontal line to separate the tasks
+                    red.line(current_task_X, (current_task_y + line_height + 1), (current_task_Xend-1), (current_task_y + line_height + 1))
+                    
+                    if colour == "red":                  
+                        logging.debug(f"\033[91m{column_properties[column]['name']}:{todo_item['content'].strip()}\033[0m")
+                    else:
+                        logging.debug(f"{column_properties[column]['name']}:{todo_item['content'].strip()}")
+
     # Write to screen
     # =========================================================================
     red.image = red.image.rotate(rotation)
     black.image = black.image.rotate(rotation)
 
-    new_image_found = 0
+    new_image_found = 2
     if os.path.exists(red.tmpImagePath):
             old_image = Image.open(red.tmpImagePath)
             diff = ImageChops.difference(red.image, old_image)
             if not diff.getbbox():
-                new_image_found += 1
+                new_image_found -= 1
 
     if os.path.exists(black.tmpImagePath):
             old_image = Image.open(black.tmpImagePath)
             diff = ImageChops.difference(black.image, old_image)
             if not diff.getbbox():
-                new_image_found += 1
+                new_image_found -= 1
 
-    if new_image_found < 2:
+    if new_image_found:
             logging.info("New information in the image detected. Updating the screen.")
             red.image.save(red.tmpImagePath)
             black.image.save(black.tmpImagePath)
