@@ -52,10 +52,7 @@ class InfoWindow:
 
     def textwidth(self, text, font):
         font = self.fonts[font]
-        ascent, descent = font.getmetrics()
         text_width = font.getmask(text).getbbox()[2]
-        text_height = font.getmask(text).getbbox()[3] + descent
-        text_width = (text_width/2)
         return text_width
     
     def rotate(self, angle):
@@ -86,7 +83,7 @@ class InfoWindow:
     def truncate(self, string, font, max_size):
         num_chars = len(string)
         for char in string:
-            (np_x, np_y) = self.getFont(font).getsize(string)
+            (np_x, np_y) = self.getFont(font).getbbox(str(string))[2:]
             if np_x >= max_size:
                 string = string[:-1]
             if np_x <= max_size:
