@@ -25,7 +25,7 @@ class ToDo:
 
         # Sort the array by priority
         items = sorted(items, key=lambda i: i['priority'])
-        unicode(items).encode('utf8')
+        str(items).encode('utf8')
         # Reverse list, since Todoist sets priority in reverse.
         # On web interface HIGH=Priority1, but stored in API as 4. who knows?!
         items.reverse()
