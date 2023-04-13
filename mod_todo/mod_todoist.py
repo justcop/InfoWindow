@@ -1,6 +1,7 @@
-import requests
+from todoist_api_python.api import TodoistAPI
 import logging
-import json
+from datetime import date
+
 
 class ToDo:
     def __init__(self, opts):
@@ -9,49 +10,44 @@ class ToDo:
         if not opts['api_key']:
             logging.warning("Not loading Todo API, since no api key is configured")
         else:
-            self.api_key = opts['api_key']
-            self.headers = {"Authorization": "Bearer " + self.api_key}
-            self.api_url = "https://api.todoist.com/rest/v2"
-            self.tasks_api_url = self.api_url + "/tasks"
+            self.api = TodoistAPI(opts['api_key'])
 
     def list(self):
         items = []
-        params = {
-            "filter": "(not completed)"
-        }
-        response = requests.get(
-            self.tasks_api_url,
-            headers=self.headers,
-            params=params
-        )
 
-        if response.ok:
-            for item in json.loads(response.content):
-                if item['checked'] == 0:
-                    if item.due:
-                        items.append({
-                            "content": item.content,
-                            "priority": item.priority,
-                            "labels":item.labels,
-                            "due":item.due.date
-                         })    
-                    else:
-                        items.append({
-                            "content": item.content,
-                            "priority": item.priority,
-                            "labels":item.labels,
-                            "due":0
-                        })    
-               
+        # Get the projects
+        try:
+            projects = self.api.get_projects()
+            projects_dict = {project.id: project.name for project in projects}
+        except Exception as error:
+            logging.error(f"Error fetching projects: {error}")
+            return []
 
-            # Sort the array by priority
-            items = sorted(items, key=lambda i: i['priority'])
+        # Get the active tasks
+        try:
+            tasks = self.api.get_tasks()
+        except Exception as error:
+            logging.error(f"Error fetching tasks: {error}")
+            return []
 
-            # Reverse list, since Todoist sets priority in reverse.
-            # On web interface HIGH=Priority1, but stored in API as 4. who knows?!
-            items.reverse()
+        # Loop through tasks and build items list
+        for task in tasks:
+          if not task.is_completed:
+            project_name = projects_dict.get(task.project_id, 'Unknown')
+            due_date = task.due.date if task.due else date.today().isoformat()
+            item = {
+                    "content": task.content,
+                    "priority": task.priority,
+                    "labels": task.labels,
+                    "due": due_date,
+                    "project_name": project_name
+            }
+            items.append(item)
+            
+        # Sort the array by priority
+        items = sorted(items, key=lambda i: i['priority'])
 
-        else:
-            logging.error("Failed to fetch tasks from Todoist API")
+        # Reverse list, since Todoist sets priority in reverse.
+        items.reverse()
 
         return items
