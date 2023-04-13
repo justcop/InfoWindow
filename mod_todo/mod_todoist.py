@@ -16,21 +16,13 @@ class ToDo:
         tasks = self.api.get_tasks()
         # Loop through the items and pull out the ones of interest
         for task in tasks:
-            if task.checked == 0:
-                if task.due:
-                    items.append({
-                        "content": item.content,
-                        "priority": item.priority,
-                        "labels": item.labels,
-                        "due": item.due.date
+                items.append({
+                    "content": task.content,
+                    "priority": task.priority,
+                    "labels": task.labels,
+                    "due": task.due.date if task.due else 0
                     })
-                else:
-                    items.append({
-                        "content": item.content,
-                        "priority": item.priority,
-                        "labels": item.labels,
-                        "due": 0
-                    })
+
 
             # Sort the array by priority
             items = sorted(items, key=lambda i: i['priority'])
