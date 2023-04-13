@@ -13,7 +13,7 @@ class ToDo:
     def list(self):
         items = []
         # Use the REST API to fetch the latest state
-        tasks = self.get_tasks()
+        tasks = api.get_tasks()
         # Loop through the items and pull out the ones of interest
         for task in tasks:
             if task.checked == 0:
