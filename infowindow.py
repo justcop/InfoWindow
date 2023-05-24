@@ -145,24 +145,24 @@ def main():
               set_column(3)
               
               if "Freezer" in todo_item['labels']:  
-                colour = "black"
+                colour = black
               else:
-                colour = "red"              
+                colour = red            
 
             if "To_Decide" in todo_item['labels']:
                 set_column(2)
                 if int(todo_days) < 3:
-                  colour = "red"
+                  colour = red
                   
             if "Charlotte" in todo_item['labels']:
                 set_column(1)
-                colour = "red"
+                colour = red
                 if int(todo_days) > 3:
                     continue
                 
             if "Joint" in todo_item['labels']:
                 set_column(1)
-                colour = "black"
+                colour = black
                 if int(todo_days) > 3:
                     continue
 
