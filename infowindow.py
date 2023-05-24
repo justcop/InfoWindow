@@ -134,10 +134,10 @@ def main():
             
             column = 0
             colour = black
-            if todo_item['due']:
-              todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
-            else:
-              todo_date = False
+            #if todo_item['due']:
+            todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
+            #else:
+            #  todo_date = False
             todo_days = (todo_date - date.today()).days
             
             
