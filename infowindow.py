@@ -134,7 +134,10 @@ def main():
             
             column = 0
             colour = black
-            todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
+            if todo_item['due']
+              todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
+            else
+              todo_date = False
             todo_days = (todo_date - date.today()).days
             
             
@@ -142,21 +145,27 @@ def main():
               set_column(3)
               
               if "Freezer" in todo_item['labels']:  
-                colour = black
+                colour = "black"
               else:
-                colour = red               
+                colour = "red"              
 
             if "To_Decide" in todo_item['labels']:
                 set_column(2)
                 if int(todo_days) < 3:
-                  colour = red
+                  colour = "red"
                   
             if "Charlotte" in todo_item['labels']:
                 set_column(1)
-                colour = red
+                colour = "red"
+                if int(todo_days) > 3:
+                    continue
                 
             if "Joint" in todo_item['labels']:
                 set_column(1)
+                colour = "black"
+                if int(todo_days) > 3:
+                    continue
+
             
             if column:
                 
@@ -165,6 +174,7 @@ def main():
                     column_width = current_task_Xend - current_task_X
                     
                     # Get the number of days until the task is due
+                   
                     number_text = str(todo_days) + " "
                     number_length = colour.textwidth(number_text, tasks_font)
                     
