@@ -136,7 +136,7 @@ def main():
             colour = black
             if todo_item['due']:
               todo_date = datetime.datetime.fromisoformat(todo_item['due']).date()
-            else
+            else:
               todo_date = False
             todo_days = (todo_date - date.today()).days
             
