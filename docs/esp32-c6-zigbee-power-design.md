@@ -44,6 +44,10 @@ E-paper panel specification: typical 50 mW refresh, 21 s full refresh = ~0.00029
 
 Provisional planning targets: **LADDA 1900: 4–8 weeks** between charges; **LADDA 2450: ~5–10 weeks** at the same load (approximately 29% longer). These are hypotheses, not validated runtime claims; rapid rejoin or slow repeated rejoin can change outcomes greatly. Battery output must support RF current spikes without brownouts. Use externally charged matched NiMH cells, a NiMH charger (not Li-ion charging IC), and verify deep-discharge / cell reversal handling. Standard NiMH packs are 2.4 V nominal and need a 3.3 V boost, not a buck-only regulator.
 
+## On-screen low-battery warning
+
+**Normal battery: show absolutely no battery indicator on the e-paper screen.** A transition to LOW or CRITICAL must trigger a screen refresh independently of task changes; recovery must remove the warning, even when the task list is unchanged. If Zigbee is offline, use a cached task snapshot to redraw the existing screen. See [the detailed low-battery-only display policy](battery-warning-display-policy.md) for state transitions, hysteresis, measurement, layout and tests.
+
 ## Acceptance measurements / gates
 
 - Verify exact HAT wiring, required input voltage, and logic levels; brownout/peak-load test with a two-cell pack.
