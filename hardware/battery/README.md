@@ -1,8 +1,46 @@
-# InfoWindow two-AA battery compartment — mechanical prototype
+# InfoWindow 2 × AA battery compartment — mechanical design
 
-This is experimental **on `feature/esp32-c6-zigbee-infowindow` only**. It does not change the working Pi implementation or the original 3D case.
+> This work is experimental and remains on `feature/esp32-c6-zigbee-infowindow`; the existing Raspberry Pi and original case files on `master` are untouched.
 
-## Preferred layout: recessed box behind acrylic
+## Preferred design (revision 2): panel-mounted holder with lift-off lid
+
+**Recommendation: TAKACHI BC3-2L-B** (black, 2 × AA, **with wire leads**). The proprietary panel-mounted battery compartment has a **tool-free detachable snap-fit cover**, a separate fixing frame and supplied screws. Once installed, the lid is removed outward from the rear; no long track/slide clearance is necessary. We should confirm the exact thumb-release action on a physical sample.
+
+Manufacturer: https://www.takachi-enclosure.com/products/BC  
+Specific technical drawing (2 pages): https://www.takachi-enclosure.com/assets/attachments/images/BC3-2L-B.pdf  
+Manufacturer's 3D example: https://www.takachi-enclosure.com/products/BC
+
+Manufacturer dimensions for AA × 2, with wires:
+- External footprint: **81.5 × 50.5 mm**
+- Overall height/depth: **18.5 mm**; verify actual protrusion into the cavity after fitting
+- Nominal Perspex cutout: **74 × 43 mm** with rounded corners (see technical PDF; not the old bezel's cutout)
+- Supported panel thickness: **1.0–3.5 mm**
+- Screwed retaining frame provided (four self-tapping M2.3 × 10 screws attaching to manufacturer's bosses, *not self-tapping into the Perspex*)
+- 140 mm wires. Keep slack, strain-relieve cable, insulate terminals.
+- Compatible with 2 × IKEA LADDA rechargeable AA cells in series; verify battery fit and polarity.
+
+The mounting frame achieves the original request to secure the holder to the Perspex without having to design and print our own shell or make a sliding-cover clearance. The battery contacts and lid mechanism are factory-made. The relatively larger 74 × 43 mm cutout must be positioned well away from fixing points to avoid weakening the backing.
+
+### Procedure before cutting Perspex
+
+1. Measure Perspex thickness and cavity clearance in the intended spot (including existing printed frame, PCB, wiring, screen fasteners, and backing spacers).
+2. Obtain the physical BC3-2L-B holder or a verified dimensional sample. Check lid pops off without needing to slide far or swing into an obstruction, test fit with actual IKEA LADDA AAs and examine the hand-access/release tab.
+3. Print or cut a **paper template from the manufacturer's dimension drawing**; compare against all neighbouring fasteners.
+4. Only then mark and cut the manufacturer-specified opening, with its specified corner radii; avoid sharp square corners, stress and overtightening. Do not use the old bezel's 73 × 39 mm cutout dimensions.
+5. Insert the holder from the display/cavity side so the removable cover is accessible from the rear; secure with the supplied frame/screws according to the manufacturer's assembly diagram and cable route.
+6. Confirm repeated lid removal and AA swaps in the mounted position. Validate battery lead polarity and power conversion before connecting to the ESP32.
+
+### What if the Takachi is hard to source?
+
+- Option A: a simple open 2 × AA battery tray recessed into a custom **printed box with vertical snap-off or captive-screw lid**. The printed lid must have a grip notch, mechanical stops, adequate finger clearance and replaceable contacts via the commercial tray.
+- Option B: a **hinged-lid** enclosed 2 × AA battery holder, if the rear is sufficiently unobstructed to allow the lid to swing. A Switch Electronics GT-YM218 is listed at 102 × 39.5 × 20.6 mm; it is longer and potentially protrudes more than the Takachi.
+- Option C: mount an enclosed holder on the *outer* surface of the Perspex with only a small wire hole; not as flush but avoids a large acrylic opening.
+
+## Superseded concept (revision 1): sliding-lid holder in printed bezel
+
+**The following design is kept as historical prototype reference only and is NOT approved for fabrication.** The likely slide travel of a commercial holder was not accommodated in the initial bezel. Its recessed slot and lid mechanism have not been validated. The STL/SCAD files in this folder remain unchanged for comparison.
+
+## Original sliding-lid concept: recessed box behind acrylic
 
 Use a commercially manufactured **enclosed two-AA holder** with its own metal battery contacts, wiring, and removable lid, and mount it in a 3D-printed bezel fastened to the rear Perspex plate. The box points into the gap between Perspex and screen while its lid remains accessible from the rear. **Do not cut the acrylic until fitting and orientation are verified.**
 
