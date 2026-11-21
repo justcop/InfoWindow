@@ -8,7 +8,7 @@
 
 - Display: retain existing Waveshare 7.5-inch HD e-paper HAT (B), 880 × 528, black/red/white, SPI. Verify exact revision/controller and electrical supply before hardware purchase.
 - Controller: ESP32-C6 (Zigbee IEEE 802.15.4 plus optional Wi-Fi), in a **low-leakage custom module/carrier**, not a conventional USB dev board for final battery use.
-- Power: **2 × AA rechargeable NiMH cells in series**, e.g. standard low-self-discharge ~1,900–2,000 mAh. Nominal pack voltage ~2.4 V, ~4.6–4.8 Wh before losses. The two cell capacities do **not** add in series.
+- Power: **2 × IKEA LADDA AA rechargeable NiMH cells in series** (user's existing batteries). Confirm whether their cells are **1900 mAh** or **2450 mAh**; both are nominally 1.2 V/cell. Pack voltage ~2.4 V; rated energy ~4.56 Wh for LADDA 1900 or ~5.88 Wh for LADDA 2450, before losses. Series capacity stays 1900 or 2450 mAh respectively, not double. Use matched cells of the same age, capacity, and state of charge.
 - Regulator: low-quiescent-current 3.3 V boost supply with enough peak input current for RF bursts and display start-up; size based on measurements. Include energy buffer capacitors. Cut e-paper controller power after refresh via a low-leakage load switch; verify HAT power interface.
 - Sleep: ESP32-C6 **deep sleep for 30 minutes** between updates. No immediate Zigbee wake demanded by the user; pending larger downloads are delivered on next scheduled wake.
 - Home Assistant / ZHA: fetch Todoist upstream and normalise/compact task data centrally, send snapshots over a custom ZHA/Zigbee application protocol. Keep auth credentials off the display.
@@ -33,7 +33,7 @@ Deep sleep reboots the Zigbee stack. On wake the device may need to re-attach, c
 
 ## Battery budget (provisional, not a measurement)
 
-Typical standard NiMH Eneloop-style AA minimum 1,900 mAh × 2 cells in series × 1.2 V ≈ 4.56 Wh nominal. Plan ~3.0–3.8 Wh useable after conversion, ageing, load and a protective cutoff.
+IKEA LADDA AA options: 1900 mAh × 2 cells in series × 1.2 V ≈ **4.56 Wh** nominal, or 2450 mAh × 2 × 1.2 V ≈ **5.88 Wh** nominal. Plan a rough 3.0–3.8 Wh usable for the 1900 cells and ~3.9–4.9 Wh for 2450 after conversion, ageing, load and protective cutoff; verify under real load. The higher-capacity pack has ~29% more nominal energy, not twice the current or twice the voltage.
 
 48 network wakes/day. Illustrative active-energy scenarios at a nominal 3.3 V load:
 - Fast: 10 seconds at 80 mA per wake = 0.035 Wh/day (before refreshes, sleep overhead). Could reach ~2–3 months in an excellent low-leakage build.
@@ -42,7 +42,7 @@ Typical standard NiMH Eneloop-style AA minimum 1,900 mAh × 2 cells in series ×
 
 E-paper panel specification: typical 50 mW refresh, 21 s full refresh = ~0.00029 Wh per display refresh; **the ESP32 and other circuitry may remain awake throughout this interval**, so total refresh-cycle energy is higher. Optimize firmware idle waiting and power gating.
 
-Conservatively tell users to **budget around 4–8 weeks between charges**, subject to actual measurements; rapid rejoin or slow repeated rejoin can move this greatly. Battery output must support RF current spikes without brownouts. Use externally charged matched NiMH cells, a NiMH charger (not Li-ion charging IC), and verify deep-discharge / cell reversal handling. Standard NiMH packs are 2.4 V nominal and need a 3.3 V boost, not a buck-only regulator.
+Provisional planning targets: **LADDA 1900: 4–8 weeks** between charges; **LADDA 2450: ~5–10 weeks** at the same load (approximately 29% longer). These are hypotheses, not validated runtime claims; rapid rejoin or slow repeated rejoin can change outcomes greatly. Battery output must support RF current spikes without brownouts. Use externally charged matched NiMH cells, a NiMH charger (not Li-ion charging IC), and verify deep-discharge / cell reversal handling. Standard NiMH packs are 2.4 V nominal and need a 3.3 V boost, not a buck-only regulator.
 
 ## Acceptance measurements / gates
 
@@ -60,4 +60,5 @@ Conservatively tell users to **budget around 4–8 weeks between charges**, subj
 - ESP32-C6 datasheet: https://documentation.espressif.com/esp32-c6_datasheet_en.html
 - Espressif Zigbee deep-sleep end-device example: https://github.com/espressif/esp-zigbee-sdk/tree/main/examples/sleepy_devices/deep_sleep_end_device
 - Waveshare display: https://www.waveshare.com/7.5inch-hd-e-paper-hat-b.htm
-- Standard Eneloop AA capacity: https://www.panasonic.com/global/energy/products/eneloop/en/lineup.html
+- IKEA LADDA AA 1900 mAh: https://www.ikea.com/gb/en/p/ladda-rechargeable-battery-hr06-aa-1-2v-00509814/
+- IKEA LADDA AA 2450 mAh: https://www.ikea.com/gb/en/p/ladda-rechargeable-battery-hr06-aa-1-2v-50504692/
