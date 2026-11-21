@@ -13,6 +13,7 @@ Manufacturer's 3D example: https://www.takachi-enclosure.com/products/BC
 Manufacturer dimensions for AA × 2, with wires:
 - External footprint: **81.5 × 50.5 mm**
 - Overall height/depth: **18.5 mm**; verify actual protrusion into the cavity after fitting
+- **Rear-facing visible flange stands approximately 1.7 mm proud of the mounting Perspex** (per manufacturer side view). It is a recessed mount, *not* truly flush. Recommend accepting the shallow lip instead of rebate-machining thin acrylic, unless a measured aesthetic requirement justifies it.
 - Nominal Perspex cutout: **74 × 43 mm** with rounded corners (see technical PDF; not the old bezel's cutout)
 - Supported panel thickness: **1.0–3.5 mm**
 - Screwed retaining frame provided (four self-tapping M2.3 × 10 screws attaching to manufacturer's bosses, *not self-tapping into the Perspex*)
